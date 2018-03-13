@@ -6,13 +6,14 @@ use think\Session;
 
 class Alipay
 {
-	public function _initialize(){
-		Session::set('usr_id','1222');
+	public function __construct(){
+		Session::set('usr_id','1223');
 	}
 
 	public function index()
 	{
-		return view();
+
+		return view('');
 	}
 
 
@@ -278,6 +279,9 @@ class Alipay
 				//付款完成后，支付宝系统发送该交易状态通知
 		    }
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+				$pay = model('Payment');
+				$data =['status'=>2];
+				$pay->where('buyer_id',Session::get('usr_id'))->update($data);
 				echo "success";	//请不要修改或删除
 			}else {
 			    //验证失败
