@@ -281,7 +281,7 @@ class Alipay
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 				$pay = model('Payment');
 				$data =['status'=>2];
-				$pay->where('buyer_id',Session::get('usr_id'))->update($data);
+				$pay->where('trade_no',$_POST['trade_no'])->update($data);
 				echo "success";	//请不要修改或删除
 			}else {
 			    //验证失败
