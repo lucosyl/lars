@@ -280,7 +280,7 @@ class Alipay
 		  //   }
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 				$pay = model('Payment');
-				$data =['body'=>$_POST['trade_status']];
+				$data =['receipt_amount'=>$_POST['receipt_amount']];
 				$pay->where('out_trade_no',$_POST['out_trade_no'])->update($data);
 				echo "success";	//请不要修改或删除
 			}else {
