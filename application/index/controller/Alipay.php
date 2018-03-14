@@ -354,5 +354,19 @@ class Alipay
 		    return ("验证失败");
 		}
 	}
+
+	//异步获取支付结果
+	public function checkPay(){
+		$out_trade_no = $_POST['out_trade_no'];
+
+		$pay = model('Payment');
+		$arr = $pay->where('out_trade_no',$out_trade_no)->find();
+
+
+		header('Content-Type:application/json;charset=utf-8');
+        die( json_encode($arr) );
+	}
+
+
 }
 
