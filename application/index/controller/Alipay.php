@@ -228,7 +228,7 @@ class Alipay
 		require_once EXTEND_PATH.'/alipay/config.php';
 		require_once EXTEND_PATH.'/alipay/pagepay/service/AlipayTradeService.php';
 
-		$arr=$_GET;
+		$arr=$_POST;
 		$alipaySevice = new AlipayTradeService($config); 
 		$alipaySevice->writeLog(var_export($_POST,true));
 		$result = $alipaySevice->check($arr);
