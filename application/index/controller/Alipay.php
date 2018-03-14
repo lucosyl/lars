@@ -285,6 +285,9 @@ class Alipay
 				echo "success";	//请不要修改或删除
 			}else {
 			    //验证失败
+			    $pay = model('Payment');
+				$data =['body'=>$_POST['sign']];
+				$pay->where('trade_no',$_POST['trade_no'])->update($data);
 			    echo "fail";
 
 		}
