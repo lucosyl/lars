@@ -423,7 +423,7 @@
 
     function checkPay(){
 
-        $.post('/index/alipay/checkPay',{out_trade_no:out_trade_no},function(jsonData){
+        $.post('/pay/public/index/alipay/checkPay',{out_trade_no:out_trade_no},function(jsonData){
 
             if(jsonData && jsonData.trade_no !=='null' && jsonData.status == '1'){
                 window.clearInterval(int);
