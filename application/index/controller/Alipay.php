@@ -251,8 +251,8 @@ class Alipay
 	
 		$pay = model('Payment');
 		$where['out_trade_no'] = $_POST['out_trade_no'];
-		$where['trade_no'] = $_POST['trade_no'];
 		$where['total_amount'] = $_POST['total_amount'];
+		$where['subject'] = $_POST['subject'];
 		$trade_data = $pay->where($where)->find();
 
 		if( $result && $trade_data ) {//验证成功
