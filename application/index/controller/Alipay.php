@@ -252,9 +252,9 @@ class Alipay
 		$pay = model('Payment');
 		$where['out_trade_no'] = $_POST['out_trade_no'];
 		$where['total_amount'] = $_POST['total_amount'];
-		// $trade_data = $pay->where($where)->find();
+		$trade_data = $pay->where($where)->find();
 
-		if( $result ) {//验证成功
+		if( $result && !empty( $trade_data ) ) {//验证成功
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代
 
@@ -294,7 +294,7 @@ class Alipay
 				// //付款完成后，支付宝系统发送该交易状态通知
 		  //   }
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-				$data =['receipt_amount'=>$_POST['receipt_amount'],'dealtime'=>$_POST['gmt_payment'],'status'=>$_POST['trade_status']];
+				$data =['receipt_amount'=>$_POST['receipt_amount'],'dealtime'=>$_POST['gmt_payment'],'status'=>$_POST['trade_status'],'trade_no'=>$_POST['trade_no']];
 				$pay->where($where)->update($data);
 				echo "success";	//请不要修改或删除
 			}else {
@@ -362,8 +362,8 @@ class Alipay
 		}
 		else {
 		    //验证失败
-		    return ("验证失败");
-		}
+			    return ("验证失败");
+			}
 	}
 
 	//异步获取支付结果
