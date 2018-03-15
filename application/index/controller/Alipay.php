@@ -36,6 +36,14 @@ class Alipay
 	    //商品描述，可空
 	    $body = trim($_POST['WIDbody']);
 
+	    $pay = model('Payment');
+		$trade_data = $pay->where('out_trade_no',$out_trade_no)->find();
+		if( !empty($trade_data) ){
+			echo "<script>alert('该商户号已经存在');javascript:window.opener=null;window.open('','_self');window.close();</script>";
+			die;
+		}
+
+
 		//构造参数
 		$payRequestBuilder = new AlipayTradePagePayContentBuilder();
 		$payRequestBuilder->setBody($body);
@@ -46,15 +54,15 @@ class Alipay
 		$aop = new AlipayTradeService($config);
 
 		//储存订单信息
-		$user = model('Payment');
-		$user->out_trade_no= $out_trade_no;
-		$user->subject= $subject;
-		$user->total_amount= $total_amount;
-		$user->body= $body;
-		$user->buyer_id= Session::get('usr_id');
-		$user->createtime = date('Y-m-d H:i:s',time());
-		$user->status = '0';
-		$res = $user->save();
+
+		$pay->out_trade_no= $out_trade_no;
+		$pay->subject= $subject;
+		$pay->total_amount= $total_amount;
+		$pay->body= $body;
+		$pay->buyer_id= Session::get('usr_id');
+		$pay->createtime = date('Y-m-d H:i:s',time());
+		$pay->status = '0';
+		$res = $pay->save();
 		if( !$res ){
 			echo "<script>alert('写入数据库错误')</script>;";
 			die;
@@ -158,7 +166,7 @@ class Alipay
 				}
 			}
 
-			var_dump($response);;
+			// var_dump($response);;
 	}
 
 	//退款查询
@@ -239,6 +247,12 @@ class Alipay
 		3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）
 		4、验证app_id是否为该商户本身。
 		*/
+	
+		$pay = model('Payment');
+		$where['trade_no'] = $_POST['trade_no'];
+		$where['out_trade_no'] = $_POST['out_trade_no'];		
+		$where['total_amount'] = $_POST['total_amount'];
+		
 		if($result) {//验证成功
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代
@@ -279,8 +293,8 @@ class Alipay
 				// //付款完成后，支付宝系统发送该交易状态通知
 		  //   }
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-				$pay = model('Payment');
-				$data =['body'=>$_POST['trade_status']];
+
+				$data =['status'=>$_POST['trade_status'],'dealtime'=>$_POST['gmt_payment']];
 				$pay->where('trade_no',$_POST['trade_no'])->update($data);
 				echo "success";	//请不要修改或删除
 			}else {
