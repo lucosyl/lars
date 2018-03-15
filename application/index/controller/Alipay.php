@@ -27,6 +27,15 @@ class Alipay
 	    //商户订单号，商户网站订单系统中唯一订单号，必填
 	    $out_trade_no = trim($_POST['WIDout_trade_no']);
 
+	    $pay = model('Payment');
+	    $where['out_trade_no'] = $out_trade_no;
+	    $trade_data = $pay->where($where)->find();
+	    if ( !empty($trade_data) )
+	    {
+	    	echo "<script>alert('当前订单已存在');window.opener=null;window.open('','_self');window.close();</script>";
+	    	die;
+	    }
+
 	    //订单名称，必填
 	    $subject = trim($_POST['WIDsubject']);
 
@@ -239,7 +248,14 @@ class Alipay
 		3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）
 		4、验证app_id是否为该商户本身。
 		*/
-		if($result) {//验证成功
+	
+		$pay = model('Payment');
+		$where['out_trade_no'] = $_POST['out_trade_no'];
+		$where['trade_no'] = $_POST['trade_no'];
+		$where['total_amount'] = $_POST['total_amount'];
+		$trade_data = $pay->where($where)->find();
+
+		if( $result && $trade_data ) {//验证成功
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代
 
@@ -279,15 +295,11 @@ class Alipay
 				// //付款完成后，支付宝系统发送该交易状态通知
 		  //   }
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-				$pay = model('Payment');
-				$data =['receipt_amount'=>$_POST['receipt_amount']];
-				$pay->where('out_trade_no',$_POST['out_trade_no'])->update($data);
+				$data =['total_amount'=>$_POST['total_amount'],'receipt_amount'=>$_POST['receipt_amount'],'dealtime'=>$_POST['gmt_payment'],'status'=>$_POST['trade_status'],'buyer'=>'buyer_id'];
+				$pay->where($where)->update($data);
 				echo "success";	//请不要修改或删除
 			}else {
 			    //验证失败
-			    $pay = model('Payment');
-				$data =['body'=>$_POST['receipt_amount']];
-				$pay->where('out_trade_no',$_POST['out_trade_no'])->update($data);
 			    echo "fail";
 
 		}
@@ -360,11 +372,19 @@ class Alipay
 		$out_trade_no = $_POST['out_trade_no'];
 
 		$pay = model('Payment');
+		$res = array();
 		$arr = $pay->where('out_trade_no',$out_trade_no)->find();
+		if( $arr['dealtime'] !=='' && $arr['trade_no'] !=='' && $arr['status'] !== "0" ){
+			$res['code'] = 200;
+			$res['message'] = "支付成功";
+		}else{
+			$res['code'] = 100;
+			$res['message'] = "支付进行中";
+		}
 
 
 		header('Content-Type:application/json;charset=utf-8');
-        die( json_encode($arr) );
+        die( json_encode($res) );
 	}
 
 

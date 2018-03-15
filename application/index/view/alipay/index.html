@@ -185,7 +185,7 @@
         <h2 id="tab4" name="tab">退 款 查 询</h2>
         <h2 id="tab5" name="tab">交 易 关 闭</h2>
     </div>
-        <form name=alipayment action=/pay/public/ali_pay.html method=post target="_blank">
+        <form name=alipayment action=/ali_pay.html method=post target="_blank">
             <div id="body1" class="show" name="divcontent">
                 <dl class="content">
                     <dt>商户订单号
@@ -425,7 +425,7 @@
 
         $.post('/pay/public/index/alipay/checkPay',{out_trade_no:out_trade_no},function(jsonData){
 
-            if(jsonData && jsonData.trade_no !=='null' && jsonData.status == '1'){
+            if(jsonData.code === 200 ){
                 window.clearInterval(int);
                 alert('支付成功');
             }
