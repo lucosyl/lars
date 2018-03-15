@@ -252,7 +252,6 @@ class Alipay
 		$pay = model('Payment');
 		$where['out_trade_no'] = $_POST['out_trade_no'];
 		$where['total_amount'] = $_POST['total_amount'];
-		$where['subject'] = $_POST['subject'];
 		$trade_data = $pay->where($where)->find();
 
 		if( $result && $trade_data ) {//验证成功
@@ -295,7 +294,7 @@ class Alipay
 				// //付款完成后，支付宝系统发送该交易状态通知
 		  //   }
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-				$data =['total_amount'=>$_POST['total_amount'],'receipt_amount'=>$_POST['receipt_amount'],'dealtime'=>$_POST['gmt_payment'],'status'=>$_POST['trade_status'],'buyer'=>$_POST['buyer_id']];
+				$data =['total_amount'=>$_POST['total_amount'],'dealtime'=>$_POST['gmt_payment'],'status'=>$_POST['trade_status']];
 				$pay->where($where)->update($data);
 				echo "success";	//请不要修改或删除
 			}else {
