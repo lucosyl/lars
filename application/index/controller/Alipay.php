@@ -60,7 +60,7 @@ class Alipay
 		$user->subject= $subject;
 		$user->total_amount= $total_amount;
 		$user->body= $body;
-		$user->buyer_id= Session::get('usr_id');
+		$user->buyer= Session::get('usr_id');
 		$user->createtime = date('Y-m-d H:i:s',time());
 		$user->status = '0';
 		$res = $user->save();
@@ -294,7 +294,7 @@ class Alipay
 				// //付款完成后，支付宝系统发送该交易状态通知
 		  //   }
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-				$data =['receipt_amount'=>$_POST['receipt_amount'],'dealtime'=>$_POST['gmt_payment'],'status'=>$_POST['trade_status'],'trade_no'=>$_POST['trade_no'],'buyer'=>$_POST['buyer_id']];
+				$data =['receipt_amount'=>$_POST['receipt_amount'],'dealtime'=>$_POST['gmt_payment'],'status'=>$_POST['trade_status'],'trade_no'=>$_POST['trade_no'],'buyer_id'=>$_POST['buyer_id']];
 				$pay->where($where)->update($data);
 				echo "success";	//请不要修改或删除
 			}else {
